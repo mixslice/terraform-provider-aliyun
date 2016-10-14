@@ -5,7 +5,7 @@ provider "aliyun" {
   max_retries = 5
 }
 
-resource "aliyun_machine" "my-speedy-server" {
+resource "aliyun_instance" "my-speedy-server" {
   name = "speedracer"
   cpus = 4
   ram  = 16384
