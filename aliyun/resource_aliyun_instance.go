@@ -38,7 +38,7 @@ func resourceAliyunInstance() *schema.Resource {
 // that failed to be created/updated/deleted.
 
 func createFunc(d *schema.ResourceData, meta interface{}) error {
-	client := meta.(*ExampleClient)
+	client := meta.(*Config)
 	machine := Machine{
 		Name: d.Get("name").(string),
 		CPUs: d.Get("cpus").(int),

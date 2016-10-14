@@ -7,7 +7,7 @@ build:
 	go build -o terraform-provider-aliyun .
 
 test:
-	go test -v .
+	go test -v ./aliyun
 
 plan:
 	@terraform plan

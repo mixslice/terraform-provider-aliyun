@@ -5,27 +5,7 @@ import (
 	"github.com/hashicorp/terraform/terraform"
 )
 
-type ExampleClient struct {
-	APIKey     string
-	Endpoint   string
-	Timeout    int
-	MaxRetries int
-}
-
-type Machine struct {
-	Name string
-	CPUs int
-	RAM  int
-}
-
-func (m *Machine) Id() string {
-	return "id-" + m.Name + "!"
-}
-
-func (c *ExampleClient) CreateMachine(m *Machine) error {
-	return nil
-}
-
+// Provider returns a terraform.ResourceProvider.
 func Provider() terraform.ResourceProvider {
 	return &schema.Provider{
 		Schema:        providerSchema(),
@@ -79,7 +59,7 @@ func providerResources() map[string]*schema.Resource {
 // to our provider which we will use to initialise a dummy client that
 // interacts with the API.
 func providerConfigure(d *schema.ResourceData) (interface{}, error) {
-	client := ExampleClient{
+	client := Config{
 		APIKey:     d.Get("api_key").(string),
 		Endpoint:   d.Get("endpoint").(string),
 		Timeout:    d.Get("timeout").(int),
