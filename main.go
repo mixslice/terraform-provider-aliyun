@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/hashicorp/terraform/plugin"
-	"github.com/zzq889/terraform-provider-aliyun/aliyun"
+	"github.com/mixslice/terraform-provider-aliyun/aliyun"
 )
 
 func main() {
