@@ -1,22 +1,26 @@
 package aliyun
 
+import (
+	"github.com/denverdino/aliyungo/ecs"
+	"github.com/denverdino/aliyungo/oss"
+)
+
 type Config struct {
-	APIKey     string
-	Endpoint   string
-	Timeout    int
-	MaxRetries int
+	AccessKey string
+	SecretKey string
 }
 
-type Machine struct {
-	Name string
-	CPUs int
-	RAM  int
+type AliyunClient struct {
+	ecsclient *ecs.Client
+	ossclient *oss.Client
 }
 
-func (m *Machine) Id() string {
-	return "id-" + m.Name + "!"
-}
+// Client configures and returns a fully initialized Client
+func (c *Config) Client() (interface{}, error) {
+	var client AliyunClient
 
-func (c *Config) CreateMachine(m *Machine) error {
-	return nil
+	client.ecsclient = ecs.NewClient(c.AccessKey, c.SecretKey)
+	// client.ossclient = oss.NewOSSClient()
+
+	return &client, nil
 }

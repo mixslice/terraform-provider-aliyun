@@ -1,12 +1,14 @@
+variable "aliyun_access_key" {}
+variable "aliyun_secret_key" {}
+
 provider "aliyun" {
-  api_key     = "s3cur3t0k3n=="
-  endpoint    = "https://api.example.org/v1"
-  timeout     = 60
-  max_retries = 5
+  access_key = "${var.aliyun_access_key}"
+  secret_key = "${var.aliyun_secret_key}"
 }
 
-resource "aliyun_instance" "my-speedy-server" {
-  name = "speedracer"
-  cpus = 4
-  ram  = 16384
+resource "aliyun_ecs" "my-server" {
+  image = "coreos-stable"
+  name = "my-server"
+  region = "nyc3"
+  size = "512mb"
 }

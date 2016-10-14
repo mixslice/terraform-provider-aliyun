@@ -1,8 +1,12 @@
 package aliyun
 
-import "github.com/hashicorp/terraform/helper/schema"
+import (
+	"fmt"
 
-func resourceAliyunInstance() *schema.Resource {
+	"github.com/hashicorp/terraform/helper/schema"
+)
+
+func resourceAliyunECS() *schema.Resource {
 	return &schema.Resource{
 		SchemaVersion: 1,
 		Create:        createFunc,
@@ -10,16 +14,20 @@ func resourceAliyunInstance() *schema.Resource {
 		Update:        updateFunc,
 		Delete:        deleteFunc,
 		Schema: map[string]*schema.Schema{ // List of supported configuration fields for your resource
+			"image": &schema.Schema{
+				Type:     schema.TypeString,
+				Required: true,
+			},
 			"name": &schema.Schema{
 				Type:     schema.TypeString,
 				Required: true,
 			},
-			"cpus": &schema.Schema{
-				Type:     schema.TypeInt,
+			"region": &schema.Schema{
+				Type:     schema.TypeString,
 				Required: true,
 			},
-			"ram": &schema.Schema{
-				Type:     schema.TypeInt,
+			"size": &schema.Schema{
+				Type:     schema.TypeString,
 				Required: true,
 			},
 		},
@@ -38,19 +46,22 @@ func resourceAliyunInstance() *schema.Resource {
 // that failed to be created/updated/deleted.
 
 func createFunc(d *schema.ResourceData, meta interface{}) error {
-	client := meta.(*Config)
-	machine := Machine{
-		Name: d.Get("name").(string),
-		CPUs: d.Get("cpus").(int),
-		RAM:  d.Get("ram").(int),
-	}
+	client := meta.(*AliyunClient).ecsclient
 
-	err := client.CreateMachine(&machine)
-	if err != nil {
-		return err
-	}
+	fmt.Print(client.DescribeRegions())
 
-	d.SetId(machine.Id())
+	// machine := Machine{
+	// 	Name: d.Get("name").(string),
+	// 	CPUs: d.Get("cpus").(int),
+	// 	RAM:  d.Get("ram").(int),
+	// }
+
+	// err := client.CreateMachine(&machine)
+	// if err != nil {
+	// 	return err
+	// }
+
+	// d.SetId(machine.Id())
 
 	return nil
 }

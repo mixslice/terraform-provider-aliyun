@@ -20,26 +20,28 @@ func Provider() terraform.ResourceProvider {
 // More info in https://github.com/hashicorp/terraform/blob/v0.6.6/helper/schema/schema.go#L29-L142
 func providerSchema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
-		"api_key": &schema.Schema{
+		"access_key": &schema.Schema{
 			Type:        schema.TypeString,
 			Required:    true,
-			Description: "API Key used to authenticate with the service provider",
+			Description: descriptions["access_key"],
 		},
-		"endpoint": &schema.Schema{
+		"secret_key": &schema.Schema{
 			Type:        schema.TypeString,
 			Required:    true,
-			Description: "The URL to the API",
+			Description: descriptions["secret_key"],
 		},
-		"timeout": &schema.Schema{
-			Type:        schema.TypeInt,
-			Required:    true,
-			Description: "Max. wait time we should wait for a successful connection to the API",
-		},
-		"max_retries": &schema.Schema{
-			Type:        schema.TypeInt,
-			Required:    true,
-			Description: "The max. amount of times we will retry to connect to the API",
-		},
+	}
+}
+
+var descriptions map[string]string
+
+func init() {
+	descriptions = map[string]string{
+		"access_key": "The access key for API operations. You can retrieve this\n" +
+			"from the 'AccessKeys' section of the Aliyun console.",
+
+		"secret_key": "The secret key for API operations. You can retrieve this\n" +
+			"from the 'AccessKeys' section of the Aliyun console.",
 	}
 }
 
@@ -51,7 +53,7 @@ func providerSchema() map[string]*schema.Schema {
 // More info here https://github.com/hashicorp/terraform/blob/v0.6.6/helper/schema/resource.go#L17-L81
 func providerResources() map[string]*schema.Resource {
 	return map[string]*schema.Resource{
-		"aliyun_instance": resourceAliyunInstance(),
+		"aliyun_ecs": resourceAliyunECS(),
 	}
 }
 
@@ -59,16 +61,14 @@ func providerResources() map[string]*schema.Resource {
 // to our provider which we will use to initialise a dummy client that
 // interacts with the API.
 func providerConfigure(d *schema.ResourceData) (interface{}, error) {
-	client := Config{
-		APIKey:     d.Get("api_key").(string),
-		Endpoint:   d.Get("endpoint").(string),
-		Timeout:    d.Get("timeout").(int),
-		MaxRetries: d.Get("max_retries").(int),
+	config := Config{
+		AccessKey: d.Get("access_key").(string),
+		SecretKey: d.Get("secret_key").(string),
 	}
 
 	// You could have some field validations here, like checking that
 	// the API Key is has not expired or that the username/password
 	// combination is valid, etc.
 
-	return &client, nil
+	return config.Client()
 }
