@@ -6,9 +6,9 @@ provider "aliyun" {
   secret_key = "${var.aliyun_secret_key}"
 }
 
-resource "aliyun_ecs" "my-server" {
-  image = "coreos-stable"
-  name = "my-server"
-  region = "nyc3"
-  size = "512mb"
+resource "aliyun_ecs" "test01" {
+  image = "ubuntu1404_64_40G_aliaegis_20160222.vhd"
+  name = "test01"
+  region = "cn-shanghai"
+  instance_type = "ecs.t1.small"
 }

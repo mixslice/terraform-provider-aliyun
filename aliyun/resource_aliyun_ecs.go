@@ -3,6 +3,8 @@ package aliyun
 import (
 	"fmt"
 
+	"github.com/denverdino/aliyungo/common"
+	"github.com/denverdino/aliyungo/ecs"
 	"github.com/hashicorp/terraform/helper/schema"
 )
 
@@ -26,7 +28,7 @@ func resourceAliyunECS() *schema.Resource {
 				Type:     schema.TypeString,
 				Required: true,
 			},
-			"size": &schema.Schema{
+			"instance_type": &schema.Schema{
 				Type:     schema.TypeString,
 				Required: true,
 			},
@@ -48,20 +50,19 @@ func resourceAliyunECS() *schema.Resource {
 func createFunc(d *schema.ResourceData, meta interface{}) error {
 	client := meta.(*AliyunClient).ecsclient
 
-	fmt.Print(client.DescribeRegions())
+	args := ecs.CreateInstanceArgs{
+		RegionId:     common.Region(d.Get("region").(string)),
+		ImageId:      d.Get("image").(string),
+		InstanceType: d.Get("instance_type").(string),
+		InstanceName: d.Get("name").(string),
+	}
 
-	// machine := Machine{
-	// 	Name: d.Get("name").(string),
-	// 	CPUs: d.Get("cpus").(int),
-	// 	RAM:  d.Get("ram").(int),
-	// }
+	instanceID, err := client.CreateInstance(&args)
+	if err != nil {
+		return fmt.Errorf("Failed to create instance from Image %s: %v", args.ImageId, err)
+	}
 
-	// err := client.CreateMachine(&machine)
-	// if err != nil {
-	// 	return err
-	// }
-
-	// d.SetId(machine.Id())
+	d.SetId(instanceID)
 
 	return nil
 }
