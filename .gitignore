@@ -43,3 +43,4 @@ terraform.tfstate.backup
 *.tfvars
 terraform-provider-aliyun
 secrets/
+crash.log

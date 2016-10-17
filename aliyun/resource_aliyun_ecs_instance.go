@@ -27,10 +27,6 @@ func resourceAliyunEcsInstance() *schema.Resource {
 				Type:     schema.TypeString,
 				Required: true,
 			},
-			"region": &schema.Schema{
-				Type:     schema.TypeString,
-				Required: true,
-			},
 			"instance_type": &schema.Schema{
 				Type:     schema.TypeString,
 				Required: true,
@@ -52,9 +48,10 @@ func resourceAliyunEcsInstance() *schema.Resource {
 
 func resourceAliyunEcsInstanceCreate(d *schema.ResourceData, meta interface{}) error {
 	client := meta.(*AliyunClient).ecsclient
+	region := meta.(*AliyunClient).region
 
 	args := ecs.CreateInstanceArgs{
-		RegionId:     common.Region(d.Get("region").(string)),
+		RegionId:     region,
 		ImageId:      d.Get("image").(string),
 		InstanceType: d.Get("instance_type").(string),
 		InstanceName: d.Get("name").(string),

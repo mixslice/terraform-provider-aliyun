@@ -7,7 +7,6 @@ import (
 	"sort"
 	"time"
 
-	"github.com/denverdino/aliyungo/common"
 	"github.com/denverdino/aliyungo/ecs"
 	"github.com/hashicorp/terraform/helper/schema"
 )
@@ -17,11 +16,6 @@ func dataSourceAliyunEcsImage() *schema.Resource {
 		Read: dataSourceAliyunEcsImageRead,
 
 		Schema: map[string]*schema.Schema{
-			"region": &schema.Schema{
-				Type:     schema.TypeString,
-				Optional: true,
-				ForceNew: true,
-			},
 			"name_regex": &schema.Schema{
 				Type:     schema.TypeString,
 				Optional: true,
@@ -45,6 +39,7 @@ func dataSourceAliyunEcsImage() *schema.Resource {
 // dataSourceAliyunEcsImageDescriptionRead performs the AMI lookup.
 func dataSourceAliyunEcsImageRead(d *schema.ResourceData, meta interface{}) error {
 	client := meta.(*AliyunClient).ecsclient
+	region := meta.(*AliyunClient).region
 
 	nameRegex, nameRegexOk := d.GetOk("name_regex")
 	ownerAlias, ownerAliasOk := d.GetOk("owner_alias")
@@ -54,7 +49,7 @@ func dataSourceAliyunEcsImageRead(d *schema.ResourceData, meta interface{}) erro
 	}
 
 	params := &ecs.DescribeImagesArgs{
-		RegionId: common.Region(d.Get("region").(string)),
+		RegionId: region,
 	}
 	if ownerAliasOk {
 		params.ImageOwnerAlias = ecs.ImageOwnerAlias(ownerAlias.(string))
