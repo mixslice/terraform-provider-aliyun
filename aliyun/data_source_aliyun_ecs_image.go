@@ -7,6 +7,7 @@ import (
 	"sort"
 	"time"
 
+	"github.com/denverdino/aliyungo/common"
 	"github.com/denverdino/aliyungo/ecs"
 	"github.com/hashicorp/terraform/helper/schema"
 )
@@ -50,13 +51,17 @@ func dataSourceAliyunEcsImageRead(d *schema.ResourceData, meta interface{}) erro
 
 	params := &ecs.DescribeImagesArgs{
 		RegionId: region,
+		Pagination: common.Pagination{
+			// TODO: replace hard coded PageSize
+			PageSize: 50,
+		},
 	}
 	if ownerAliasOk {
 		params.ImageOwnerAlias = ecs.ImageOwnerAlias(ownerAlias.(string))
 	}
 
 	images, _, err := client.DescribeImages(params)
-	log.Printf("miaow: %v", images)
+	log.Printf("[DEBUG] list images %v", images)
 	if err != nil {
 		return err
 	}

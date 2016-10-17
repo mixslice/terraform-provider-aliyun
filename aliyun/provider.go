@@ -13,11 +13,13 @@ func Provider() terraform.ResourceProvider {
 			"access_key": &schema.Schema{
 				Type:        schema.TypeString,
 				Required:    true,
+				DefaultFunc: schema.EnvDefaultFunc("ALIYUN_ACCESS_KEY_ID", nil),
 				Description: descriptions["access_key"],
 			},
 			"secret_key": &schema.Schema{
 				Type:        schema.TypeString,
 				Required:    true,
+				DefaultFunc: schema.EnvDefaultFunc("ALIYUN_SECRET_ACCESS_KEY", nil),
 				Description: descriptions["secret_key"],
 			},
 			"region": &schema.Schema{

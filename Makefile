@@ -8,7 +8,7 @@ build:
 	go build -o terraform-provider-aliyun .
 
 test:
-	go test -v ./aliyun
+	TF_ACC=1 go test -v ./aliyun
 
 plan:
 	@terraform plan

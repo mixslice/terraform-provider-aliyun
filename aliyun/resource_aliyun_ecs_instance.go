@@ -25,7 +25,8 @@ func resourceAliyunEcsInstance() *schema.Resource {
 			},
 			"name": &schema.Schema{
 				Type:     schema.TypeString,
-				Required: true,
+				Optional: true,
+				Computed: true,
 			},
 			"instance_type": &schema.Schema{
 				Type:     schema.TypeString,
@@ -54,7 +55,10 @@ func resourceAliyunEcsInstanceCreate(d *schema.ResourceData, meta interface{}) e
 		RegionId:     region,
 		ImageId:      d.Get("image").(string),
 		InstanceType: d.Get("instance_type").(string),
-		InstanceName: d.Get("name").(string),
+	}
+
+	if v, ok := d.GetOk("name"); ok {
+		args.InstanceName = v.(string)
 	}
 
 	instanceID, err := client.CreateInstance(&args)
@@ -93,7 +97,7 @@ func InstanceStateRefreshFunc(client *ecs.Client, instanceID string) resource.St
 	return func() (interface{}, string, error) {
 		instance, err := client.DescribeInstanceAttribute(instanceID)
 		if err != nil {
-			if reqErr, _ := err.(*common.Error); reqErr.StatusCode == 404 {
+			if reqErr, ok := err.(*common.Error); ok && reqErr.StatusCode == 404 {
 				return nil, "", nil
 			}
 
