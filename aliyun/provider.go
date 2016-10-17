@@ -53,7 +53,7 @@ func init() {
 // More info here https://github.com/hashicorp/terraform/blob/v0.6.6/helper/schema/resource.go#L17-L81
 func providerResources() map[string]*schema.Resource {
 	return map[string]*schema.Resource{
-		"aliyun_ecs": resourceAliyunECS(),
+		"aliyun_ecs_instance": resourceAliyunEcsInstance(),
 	}
 }
 
