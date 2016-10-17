@@ -4,7 +4,7 @@ variable "aliyun_secret_key" {}
 provider "aliyun" {
   access_key = "${var.aliyun_access_key}"
   secret_key = "${var.aliyun_secret_key}"
-  region = "cn-beijing"
+  region = "cn-qingdao"
 }
 
 data "aliyun_ecs_image" "ubuntu" {
@@ -16,5 +16,5 @@ data "aliyun_ecs_image" "ubuntu" {
 resource "aliyun_ecs_instance" "test01" {
   image = "${data.aliyun_ecs_image.ubuntu.id}"
   name = "test01"
-  instance_type = "ecs.n1.tiny"
+  instance_type = "ecs.s1.small"
 }

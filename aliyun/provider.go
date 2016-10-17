@@ -28,7 +28,7 @@ func Provider() terraform.ResourceProvider {
 					"ALIYUN_DEFAULT_REGION",
 				}, nil),
 				Description:  descriptions["region"],
-				InputDefault: "cn-beijing",
+				InputDefault: "cn-qingdao",
 			},
 		},
 
