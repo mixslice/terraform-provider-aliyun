@@ -8,28 +8,28 @@ import (
 // Provider returns a terraform.ResourceProvider.
 func Provider() terraform.ResourceProvider {
 	return &schema.Provider{
-		Schema:        providerSchema(),
-		ResourcesMap:  providerResources(),
-		ConfigureFunc: providerConfigure,
-	}
-}
+		Schema: map[string]*schema.Schema{
+			"access_key": &schema.Schema{
+				Type:        schema.TypeString,
+				Required:    true,
+				Description: descriptions["access_key"],
+			},
+			"secret_key": &schema.Schema{
+				Type:        schema.TypeString,
+				Required:    true,
+				Description: descriptions["secret_key"],
+			},
+		},
 
-// List of supported configuration fields for your provider.
-// Here we define a linked list of all the fields that we want to
-// support in our provider (api_key, endpoint, timeout & max_retries).
-// More info in https://github.com/hashicorp/terraform/blob/v0.6.6/helper/schema/schema.go#L29-L142
-func providerSchema() map[string]*schema.Schema {
-	return map[string]*schema.Schema{
-		"access_key": &schema.Schema{
-			Type:        schema.TypeString,
-			Required:    true,
-			Description: descriptions["access_key"],
+		DataSourcesMap: map[string]*schema.Resource{
+			"aliyun_ecs_image": dataSourceAliyunEcsImage(),
 		},
-		"secret_key": &schema.Schema{
-			Type:        schema.TypeString,
-			Required:    true,
-			Description: descriptions["secret_key"],
+
+		ResourcesMap: map[string]*schema.Resource{
+			"aliyun_ecs_instance": resourceAliyunEcsInstance(),
 		},
+
+		ConfigureFunc: providerConfigure,
 	}
 }
 
@@ -42,18 +42,6 @@ func init() {
 
 		"secret_key": "The secret key for API operations. You can retrieve this\n" +
 			"from the 'AccessKeys' section of the Aliyun console.",
-	}
-}
-
-// List of supported resources and their configuration fields.
-// Here we define da linked list of all the resources that we want to
-// support in our provider. As an example, if you were to write an AWS provider
-// which supported resources like ec2 instances, elastic balancers and things of that sort
-// then this would be the place to declare them.
-// More info here https://github.com/hashicorp/terraform/blob/v0.6.6/helper/schema/resource.go#L17-L81
-func providerResources() map[string]*schema.Resource {
-	return map[string]*schema.Resource{
-		"aliyun_ecs_instance": resourceAliyunEcsInstance(),
 	}
 }
 
