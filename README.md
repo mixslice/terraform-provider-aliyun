@@ -1,3 +1,3 @@
 # Terraform Aliyun Provider
 
-Aliyun aka Alibaba Cloud is China's leading cloud provider.
+This is **DEPRECATED**! Please go to https://github.com/alibaba/terraform-provider
